@@ -1,78 +1,81 @@
 ---
 layout: post
-title: Sample blog post
-subtitle: Each post also has a subtitle
+title: ST表
+subtitle: ~~st创建的算法~~
 gh-repo: daattali/beautiful-jekyll
 gh-badge: [star, fork, follow]
-tags: [test]
+tags: [OI]
 comments: true
 ---
+首先我们来看一个问题：
 
-This is a demo post to show you how to write blog posts with markdown.  I strongly encourage you to [take 5 minutes to learn how to write in markdown](https://markdowntutorial.com/) - it'll teach you how to transform regular text into bold/italics/headings/tables/etc.
+> 长度为N的序列，M次查询，每次查询区间最大值
+>
+> $N\leqslant 1e5 \ M\leqslant 1e6$
+>
+> （P3865）
 
-**Here is some bold text**
+这时候，$log(n)​$的线段树已经不够优秀了，我们的ST表就该出场了
 
-## Here is a secondary heading
+做这道题，一个很自然的想法便是记录 f[i,j] 为 [i,j] 内的最大值，显然有转移方程 $f(i,j)=\max(f(i,j-1),a[j])​$
 
-Here's a useless table:
+但是这样预处理是 $O(N^2)​$ 的，不能通过，我们需要进一步优化
 
-| Number | Next number | Previous number |
-| :------ |:--- | :--- |
-| Five | Six | Four |
-| Ten | Eleven | Nine |
-| Seven | Eight | Six |
-| Two | Three | One |
+我们可以采用倍增思想，是f[i,j]为从$a_i$开始，连续$2^j$个数的最大值，显然：
 
+f(i,0)=$a_i​$
 
-How about a yummy crepe?
+f(i,j)=max(f[i,j-1],f[i+$2^{j-1}$,j-1])
 
-![Crepe](https://s3-media3.fl.yelpcdn.com/bphoto/cQ1Yoa75m2yUFFbY2xwuqw/348s.jpg)
+好了，现在我们回归正题：怎么处理询问呢？
 
-It can also be centered!
+我们可以把区间拆成两个相重叠的区间：
 
-![Crepe](https://s3-media3.fl.yelpcdn.com/bphoto/cQ1Yoa75m2yUFFbY2xwuqw/348s.jpg){: .mx-auto.d-block :}
+![](https://i.loli.net/2019/07/27/5d3bff1f490a472475.png)
 
-Here's a code chunk:
+询问区间长度为 len ，我们从左端点向右找一段长为 $2^{log\ len}$的区间（蓝色），右端点向左也找一段长为  $2^{log\ len}$的区间（黄色部分），显然这两段区间已经覆盖了整个区间（中间重叠了绿色），取最大值即可
 
-~~~
-var foo = function(x) {
-  return(x + 5);
+为了保证询问复杂度为 O(1)，我们需要提前预处理出每个log len向下取整后的值
+
+好了好了，上代码啦
+
+```c++
+#include <iostream>
+#include <cstdio>
+using namespace std;
+int a[100010];
+int LOG[100010];//LOG[i]为log i向下取整后的值
+int maxn[100010][50];//刚刚说的f(i,j)
+inline int read(){
+   int s=0,w=1;
+   char ch=getchar();
+   while(ch<'0'||ch>'9'){
+        if(ch=='-')w=-1;ch=getchar();
+   }
+   while(ch>='0'&&ch<='9') s=s*10+ch-'0',ch=getchar();
+   return s*w;
 }
-foo(3)
-~~~
-
-And here is the same code with syntax highlighting:
-
-```javascript
-var foo = function(x) {
-  return(x + 5);
+int main(){
+    int n,m;
+    n=read();m=read();
+    int i,j;
+    LOG[0]=-1;
+    for(i=1;i<=n;i++){
+        a[i]=read();LOG[i]=LOG[i/2]+1;
+    }
+    for(i=1;i<=n;i++) maxn[i][0]=a[i];
+    for(i=1;i<=LOG[n];i++)
+    for(j=1;j+(1<<i)-1<=n;j++)
+    maxn[j][i]=max(maxn[j][i-1],maxn[j+(1<<(i-1))][i-1]);
+    int l=0,r=0;
+    for(i=1;i<=m;i++){
+        l=read();r=read();
+        int len=LOG[r-l+1];
+        printf("%d\n",max(maxn[l][len],maxn[r-(1<<(len))+1][len]));//1<<len就是2^len
+    }
+    return 0;
 }
-foo(3)
+
 ```
 
-And here is the same code yet again but with line numbers:
-
-{% highlight javascript linenos %}
-var foo = function(x) {
-  return(x + 5);
-}
-foo(3)
-{% endhighlight %}
-
-## Boxes
-You can add notification, warning and error boxes like this:
-
-### Notification
-
-{: .box-note}
-**Note:** This is a notification box.
-
-### Warning
-
-{: .box-warning}
-**Warning:** This is a warning box.
-
-### Error
-
-{: .box-error}
-**Error:** This is an error box.
+这道题很坑：必须用快读/scanf + printf不然O2 + iOS::sync_with_stdio(false)都救不了你
