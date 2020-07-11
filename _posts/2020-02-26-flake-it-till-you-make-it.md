@@ -2,9 +2,7 @@
 layout: post
 title: 普通莫队
 subtitle: 如何优雅的暴力 by zcl
-cover-img: /assets/img/path.jpg
-thumbnail-img: /assets/img/thumb.png
-share-img: /assets/img/path.jpg
+
 tags: [OI]
 ---
 
