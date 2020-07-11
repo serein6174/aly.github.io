@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 普通莫队
-subtitle: 如何优雅的暴力 by zcl
+subtitle: 如何优雅的暴力
 
 tags: [OI]
 ---
