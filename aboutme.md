@@ -1,7 +1,7 @@
 ---
 layout: page
-title: 关于我
-subtitle: Why you'd want to go on a date with me
+title: 关于zcl
+subtitle: 它SPFA了
 ---
 
 zcl,一个菜鸡/AFOer  
