@@ -12,11 +12,9 @@ author: zcl
 
 navbar-links:
   About Me: "aboutme"
-  Resources:
-    - Beautiful Jekyll: "https://beautifuljekyll.com"
-    - Learn markdown: "https://www.markdowntutorial.com/"
+  归档: "https://bluesky-zcl.github.io/qaq.github.io/tags/"
   Author's home: "https://deanattali.com"
-
+  
 # --- Logo --- #
 
 # Image to show in the navigation bar - works best with a square image
