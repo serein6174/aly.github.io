@@ -11,7 +11,7 @@ author:Alysia Zhang
 # --- List of links in the navigation bar --- #
 
 navbar-links:
-  About Me: "关于我"
+  关于我: "aboutme"
   分类: "https://bluesky-zcl.github.io/qaq.github.io/tags/"
   
 # --- Logo --- #
